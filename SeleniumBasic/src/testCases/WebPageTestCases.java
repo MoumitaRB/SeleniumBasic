@@ -45,4 +45,22 @@ public class WebPageTestCases extends SeleniumTestBase{
 			Assert.assertTrue(false);
 		}		
 	}
+	
+	
+	@Test
+	 public void loginTest_With_Invalid_Email_And_Valid_Pwd() {
+		wp = new WebPage(driver);
+		wp.launchUrl();
+		wp.setEmail("xyz@yourstore.com");
+		wp.setPassword("admin");
+		wp.clickOnLoginBtn();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		boolean status = wp.verifyingErrorMsg();
+		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		if(status == true) {
+			Assert.assertTrue(true);
+		} else {
+			Assert.assertTrue(false);
+		}		
+	}
 }
