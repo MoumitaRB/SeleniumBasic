@@ -1,8 +1,7 @@
 package testCases;
 import pages.WebPage;
 import testBase.SeleniumTestBase;
-
-import static org.testng.Assert.assertEquals;
+import java.time.*;
 
 import java.util.concurrent.TimeUnit;
 
@@ -14,53 +13,47 @@ public class WebPageTestCases extends SeleniumTestBase{
 	public WebPage wp;
 	
 	@Test
-	public void loginTest_With_Valid_Email_And_Valid_Pwd() {
+	public void verifyingTextMsgAfterClickingOnRemoveBtnTest() {
 		wp = new WebPage(driver);
 		wp.launchUrl();
-		wp.setEmail("admin@yourstore.com");
-		wp.setPassword("admin");
-		wp.clickOnLoginBtn();
-		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-		boolean status = wp.verifyingDashboardTitle();
+		wp.clickOnCheckBox();
+		boolean status=wp.verifyingTextMsg();
 		if(status == true) {
 			Assert.assertTrue(true);
 		} else {
 			Assert.assertTrue(false);
-		}		
+		}
 	}
 	
 	@Test
-	 public void loginTest_With_Valid_Email_And_Invalid_Pwd() {
+	public void verifyingAddBtnIsDispalyedTest() {
 		wp = new WebPage(driver);
 		wp.launchUrl();
-		wp.setEmail("admin@yourstore.com");
-		wp.setPassword("admin123");
-		wp.clickOnLoginBtn();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		boolean status = wp.verifyingErrorMsg();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		wp.clickOnCheckBox();
+		boolean status =wp.isAddBtnDisplayed();
 		if(status == true) {
 			Assert.assertTrue(true);
 		} else {
 			Assert.assertTrue(false);
-		}		
+		}
 	}
-	
 	
 	@Test
-	 public void loginTest_With_Invalid_Email_And_Valid_Pwd() {
+	public void verifyingCheckBoxIsNotDisplayedAfterClickingOnRemoveBtnTest() throws InterruptedException{
 		wp = new WebPage(driver);
 		wp.launchUrl();
-		wp.setEmail("xyz@yourstore.com");
-		wp.setPassword("admin");
-		wp.clickOnLoginBtn();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-		boolean status = wp.verifyingErrorMsg();
-		driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+		wp.clickOnCheckBox();
+		Thread.sleep(5000);
+		boolean status = wp.isCheckboxDisplayed();
 		if(status == true) {
-			Assert.assertTrue(true);
-		} else {
 			Assert.assertTrue(false);
-		}		
+		} else {
+			Assert.assertTrue(true);
+		}
 	}
+	
+	
+	
+	
+	
 }

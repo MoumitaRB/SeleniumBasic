@@ -1,24 +1,36 @@
 package pages;
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.FluentWait;
+import org.openqa.selenium.support.ui.Wait;
+
+import com.google.common.base.Function;
 
 
 public class WebPage {
 	
 	public WebDriver driver;
+	
 	//locators
-	private String url= "https://admin-demo.nopcommerce.com/login";
-	@FindBy(xpath="//input[@id='Email']")
-	private WebElement emailTextBox;
-	@FindBy(id="Password")
-	private WebElement pwdTextBox;
-	@FindBy(xpath="//button[contains(text(),'Log in')]")
-	private WebElement loginBtn;
-	@FindBy(xpath="//div[contains(text(),'Login was unsuccessful. Please correct the errors and try again.')]")
-	private WebElement errMsg;
+	private String url= "https://the-internet.herokuapp.com/dynamic_controls";
+	@FindBy(xpath="//body/div[2]/div[1]/div[1]/form[1]/div[1]/input[1]")
+	private WebElement checkBox;
+	@FindBy(xpath="//button[contains(text(),'Remove')]")
+	private WebElement removeBtn;
+	@FindBy(xpath = "//p[@id='message']")
+	private WebElement textMsg;
+	@FindBy(xpath = "//button[contains(text(),'Add')]")
+	private WebElement addBtn;
+	@FindBy(xpath="//button[contains(text(),'Enable')]")
+	private WebElement enableBtn;
 	
 	
 	public WebPage(WebDriver driver)
@@ -36,38 +48,49 @@ public class WebPage {
 		driver.get(url);
 	}
 	
-	
-	public void setEmail(String emailId) {
-		emailTextBox.clear();
-		emailTextBox.sendKeys(emailId);
-	}
-    
-	public void setPassword(String pwd) {
-		pwdTextBox.clear();
-		pwdTextBox.sendKeys(pwd);
+	public void clickOnCheckBox() {
+		checkBox.click();
+		removeBtn.click();
+		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 	
-	public void clickOnLoginBtn() {
-		loginBtn.click();
-	}
-	
-	
-	public boolean verifyingDashboardTitle() {
+	public boolean verifyingTextMsg() {
 		boolean status = false;
-		String title = driver.getTitle();
-		if(title.equals("Dashboard / nopCommerce administration")){
+		String msg = textMsg.getText();
+		if(msg.equals("It's gone!")) {
 			status = true;
-		} 
-		return status;
+		}
+		 return status;		
 	}
 	
-	public boolean verifyingErrorMsg() {
+	public boolean isAddBtnDisplayed() {
 		boolean status = false;
-		String errorMsg = errMsg.getText();
-		if(errorMsg.contains("Login was unsuccessful")) {
+		boolean addBtnFlag =addBtn.isDisplayed();
+		if(addBtnFlag==true) {
 			status = true;
 		}
 		return status;
 	}
+	
+	public boolean isCheckboxDisplayed() {		
+		// Waiting 30 seconds for an element to be present on the page, checking
+		   // for its presence once every 5 seconds.
+		try {
+		   Wait<WebDriver> wait = new FluentWait<WebDriver>(driver)
+		       .withTimeout(Duration.ofSeconds(30L))
+		       .pollingEvery(Duration.ofSeconds(5L))
+		       .ignoring(NoSuchElementException.class);
 
+		   WebElement foo = wait.until(new Function<WebDriver, WebElement>() {
+		     public WebElement apply(WebDriver driver) {
+		       return driver.findElement(By.xpath("//body/div[2]/div[1]/div[1]/form[1]/div[1]/input[1]"));
+		     }
+		   });
+		   return (foo != null);
+		} catch(TimeoutException tex) {
+			return false;
+		}
+
+	}
+		
 }
